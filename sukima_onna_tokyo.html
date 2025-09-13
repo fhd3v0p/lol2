@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>隙間女 | МЁРТВЫЕ ПИКСЕЛИ</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
+        
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-secondary: #1a1a2e;
+            --text-primary: #00ffaa;
+            --text-secondary: #666;
+            --accent-pink: #ff0080;
+            --accent-blue: #0099ff;
+            --accent-purple: #8a2be2;
+            --border-color: #333;
+            --choice-bg: #001a0f;
+            --choice-hover: #002a1f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Share Tech Mono', 'Noto Sans JP', monospace;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Glitch эффекты как в 2005-2006 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 170, 0.03) 2px,
+                    rgba(0, 255, 170, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+            animation: scanlines 2s linear infinite;
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        .phone-container {
+            width: 380px;
+            height: 720px;
+            margin: 20px auto;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border: 4px solid var(--border-color);
+            border-radius: 25px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(0, 255, 170, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-dark);
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phone-header {
+            background: var(--bg-secondary);
+            padding: 8px 12px;
+            font-size: 0.7rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .japanese-text {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 300;
+        }
+
+        .glitch-text {
+            animation: textGlitch 2s infinite;
+        }
+
+        @keyframes textGlitch {
+            0%, 90% { transform: translateX(0); }
+            92% { transform: translateX(-2px); }
+            94% { transform: translateX(2px); }
+            96% { transform: translateX(-1px); }
+            98% { transform: translateX(1px); }
+            100% { transform: translateX(0); }
+        }
+
+        .battery {
+            color: var(--accent-pink);
+            animation: batteryBlink 2s infinite;
+        }
+
+        @keyframes batteryBlink {
+            0%, 70% { opacity: 1; }
+            85%, 100% { opacity: 0.3; }
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .screen-title {
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--text-primary);
+        }
+
+        /* BOOT SCREEN */
+        .boot-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+        }
+
+        .device-logo {
+            font-size: 36px;
+            color: var(--text-primary);
+            font-weight: bold;
+            margin-bottom: 20px;
+            animation: logoGlow 3s infinite alternate;
+        }
+
+        @keyframes logoGlow {
+            from { text-shadow: 0 0 10px var(--text-primary); }
+            to { text-shadow: 0 0 30px var(--text-primary), 0 0 40px var(--text-primary); }
+        }
+
+        .progress-bar {
+            width: 220px;
+            height: 20px;
+            background: #333;
+            border: 2px solid #666;
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--text-primary), var(--accent-blue));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .boot-message {
+            color: #ccc;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        /* MEMORY ENTRIES */
+        .memory-entry {
+            margin: 8px 0;
+            padding: 12px;
+            border-radius: 8px;
+            animation: messageSlide 0.3s ease-out;
+            position: relative;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .memory-entry.normal {
+            background: rgba(0, 255, 170, 0.1);
+            border: 1px solid rgba(0, 255, 170, 0.3);
+        }
+
+        .memory-entry.corrupted {
+            background: linear-gradient(45deg, rgba(255, 0, 128, 0.2), rgba(0, 0, 0, 0.8));
+            border: 1px solid var(--accent-pink);
+            animation: memoryGlitch 0.5s ease-out;
+        }
+
+        .memory-entry.system {
+            background: rgba(138, 43, 226, 0.2);
+            border: 1px solid var(--accent-purple);
+            text-align: center;
+            font-size: 12px;
+        }
+
+        @keyframes memoryGlitch {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-2px); }
+            75% { transform: translateX(2px); }
+        }
+
+        .memory-header {
+            font-size: 10px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .memory-text {
+            font-size: 14px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+        }
+
+        .memory-timestamp {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+
+        .japanese-symbol {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-size: 18px;
+            color: var(--accent-pink);
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        /* NAVIGATION */
+        .nav-button {
+            background: rgba(0, 255, 170, 0.2);
+            border: 1px solid var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 4px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 12px;
+            margin: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: rgba(0, 255, 170, 0.4);
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+        }
+
+        .choice-button {
+            width: 100%;
+            padding: 12px;
+            margin: 6px 0;
+            background: var(--choice-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .choice-button:hover {
+            background: var(--choice-hover);
+            border-color: var(--text-primary);
+            box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+        }
+
+        .choice-button.dangerous {
+            border-color: var(--accent-pink);
+            color: var(--accent-pink);
+        }
+
+        .choice-button.dangerous:hover {
+            background: rgba(255, 0, 128, 0.1);
+            box-shadow: 0 0 10px rgba(255, 0, 128, 0.3);
+        }
+
+        .choices {
+            padding: 15px;
+            border-top: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 12px;
+            padding: 20px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .hidden { display: none; }
+        .text-center { text-align: center; }
+        .text-pink { color: var(--accent-pink); }
+        .text-blue { color: var(--accent-blue); }
+        .text-purple { color: var(--accent-purple); }
+
+        .status-bar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 3px 6px;
+            border-radius: 3px;
+            z-index: 100;
+        }
+
+        /* Course integration styles */
+        .course-button {
+            background: rgba(255, 0, 128, 0.2);
+            border: 1px solid var(--accent-pink);
+            padding: 6px 12px;
+            border-radius: 4px;
+            color: var(--accent-pink);
+            font-size: 10px;
+            margin-top: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .course-button:hover {
+            background: rgba(255, 0, 128, 0.4);
+            box-shadow: 0 0 10px rgba(255, 0, 128, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="status-bar japanese-text">隙間女 v1.0</div>
+
+    <div class="phone-container">
+        <div class="screen">
+            <div class="phone-header">
+                <div>
+                    <span style="display: flex; gap: 2px;">
+                        <div style="width: 3px; height: 8px; background: var(--text-primary); opacity: 1;"></div>
+                        <div style="width: 3px; height: 8px; background: var(--text-primary); opacity: 1;"></div>
+                        <div style="width: 3px; height: 8px; background: var(--text-primary); opacity: 0.3;"></div>
+                        <div style="width: 3px; height: 8px; background: var(--text-primary); opacity: 0.3;"></div>
+                    </span>
+                    <span class="japanese-text">DoCoMo P901i</span>
+                </div>
+                <div class="battery">12% ⚠️</div>
+            </div>
+
+            <div id="gameContent" class="content-area"></div>
+
+            <div id="choicesContainer" class="choices">
+                <div class="loading japanese-text">システム初期化中...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Telegram Web App API
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+        }
+
+        class SukimaOnnaGame {
+            constructor() {
+                this.gameContent = document.getElementById('gameContent');
+                this.choicesContainer = document.getElementById('choicesContainer');
+                this.currentMemory = 0;
+                this.gameState = {
+                    deviceBooted: false,
+                    memoriesUnlocked: 0,
+                    investigationStarted: false,
+                    truthRevealed: false,
+                    finalChoice: null,
+                    coursesViewed: false
+                };
+                this.playerData = {
+                    name: null,
+                    discoveries: [],
+                    suspicions: []
+                };
+
+                // Получаем данные пользователя Telegram
+                if (tg?.initDataUnsafe?.user) {
+                    this.playerData.telegramUser = tg.initDataUnsafe.user;
+                }
+
+                this.init();
+            }
+
+            init() {
+                this.showBootScreen();
+            }
+
+            showBootScreen() {
+                this.gameContent.innerHTML = `
+                    <div class="boot-screen">
+                        <div class="device-logo japanese-text glitch-text">隙間女</div>
+                        <div style="text-align: center; margin-bottom: 30px;">
+                            <div style="font-size: 18px; color: var(--text-primary); margin-bottom: 8px;">МЁРТВЫЕ ПИКСЕЛИ</div>
+                            <div style="font-size: 14px; color: var(--accent-pink); margin-bottom: 4px;">📱 Телефон нашли в щели между зданиями</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Записи Аиры Мацуи • Токио 2005</div>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progressFill" class="progress-fill"></div>
+                        </div>
+                        <div id="bootMessage" class="boot-message japanese-text">メモリ復元中...</div>
+                    </div>
+                `;
+
+                const messages = [
+                    'メモリ復元中... (Восстановление памяти...)',
+                    'データ解析中... (Анализ данных...)',
+                    '暗号解読中... (Расшифровка...)',
+                    '最後の記録発見... (Найдены последние записи...)',
+                    'システム準備完了 (Система готова)'
+                ];
+
+                let progress = 0;
+                const progressBar = document.getElementById('progressFill');
+                const messageEl = document.getElementById('bootMessage');
+
+                const bootInterval = setInterval(() => {
+                    progress += 20;
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress <= 100) {
+                        messageEl.innerHTML = messages[Math.floor(progress / 20) - 1] || messages[messages.length - 1];
+                    }
+                    
+                    if (progress >= 100) {
+                        clearInterval(bootInterval);
+                        setTimeout(() => {
+                            this.gameState.deviceBooted = true;
+                            this.showMainInterface();
+                        }, 1000);
+                    }
+                }, 800);
+            }
+
+            showMainInterface() {
+                this.gameContent.innerHTML = `
+                    <div style="padding: 15px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div class="japanese-text" style="font-size: 14px; color: var(--accent-pink); margin-bottom: 8px;">
+                                <span class="japanese-symbol">隙</span>ЩЕЛЬ В СТЕНЕ
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">
+                                Записи Аиры Мацуи (松井愛良) • Токио, 2005
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-secondary); margin-top: 4px;">
+                                Тату-мастер • Найдена мертвой в узкой щели
+                            </div>
+                        </div>
+
+                        <div style="background: rgba(255, 0, 128, 0.1); border: 1px solid var(--accent-pink); border-radius: 8px; padding: 12px; margin-bottom: 15px;">
+                            <div style="font-size: 11px; color: var(--accent-pink); margin-bottom: 4px;">⚠️ ПОЛИЦЕЙСКИЙ ОТЧЕТ</div>
+                            <div style="font-size: 12px;">Тело обнаружено между двумя зданиями в Сибуя. Щель шириной 15 см. Причина смерти: сдавливание. Как жертва туда попала - неизвестно. Телефон найден рядом с телом.</div>
+                        </div>
+
+                        <div id="memoryList"></div>
+                    </div>
+                `;
+
+                this.choicesContainer.innerHTML = '';
+                this.addChoice('🔍 Начать просмотр записей', 'start_investigation', false, () => {
+                    this.startInvestigation();
+                });
+                this.addChoice('📱 Информация об устройстве', 'device_info', false, () => {
+                    this.showDeviceInfo();
+                });
+            }
+
+            startInvestigation() {
+                this.gameState.investigationStarted = true;
+                this.showMemory(1);
+            }
+
+            showMemory(memoryNumber) {
+                this.currentMemory = memoryNumber;
+                this.gameState.memoriesUnlocked = Math.max(this.gameState.memoriesUnlocked, memoryNumber);
+
+                const memories = this.getMemories();
+                const memory = memories[memoryNumber - 1];
+
+                if (!memory) {
+                    this.showEnding();
+                    return;
+                }
+
+                this.gameContent.innerHTML = `
+                    <div style="padding: 15px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                            <div class="nav-button" onclick="game.showMainInterface()">← Назад</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">
+                                記録 ${memoryNumber} / ${memories.length}
+                            </div>
+                            ${memoryNumber < memories.length ? `<div class="nav-button" onclick="game.showMemory(${memoryNumber + 1})">Далее →</div>` : '<div></div>'}
+                        </div>
+
+                        <div class="memory-entry ${memory.type}">
+                            <div class="memory-header">
+                                <span><span class="japanese-symbol">${memory.symbol}</span>${memory.title}</span>
+                                <span>${memory.timestamp}</span>
+                            </div>
+                            <div class="memory-text">${memory.content}</div>
+                            ${memory.timestamp ? `<div class="memory-timestamp">${memory.metadata || ''}</div>` : ''}
+                        </div>
+
+                        ${memory.courses ? `
+                            <div style="margin-top: 15px; padding: 12px; background: rgba(0, 255, 170, 0.1); border: 1px solid var(--text-primary); border-radius: 8px;">
+                                <div style="font-size: 11px; color: var(--text-primary); margin-bottom: 8px;">📚 ОБУЧАЮЩИЕ МАТЕРИАЛЫ</div>
+                                <div style="font-size: 12px; margin-bottom: 8px;">${memory.coursesText}</div>
+                                ${memory.courses.map(course => `
+                                    <button class="course-button" onclick="game.showCourse('${course.id}')">
+                                        🎓 ${course.title} - ${course.price}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                this.updateChoicesForMemory(memory, memoryNumber);
+            }
+
+            getMemories() {
+                return [
+                    {
+                        symbol: '駅',
+                        title: 'Женщина на платформе Синдзюку',
+                        timestamp: '15.11.05 - 23:42',
+                        type: 'normal',
+                        content: `Сегодня видела что-то странное на станции Синдзюку. Женщина стояла между поездами - в щели между вагонами.
+
+Когда поезд тронулся, она не упала. Просто... поехала вместе с ним. Плоская, как лист бумаги.
+
+Все прошли мимо, как будто не видели. Только я заметила.`,
+                        metadata: 'Голосовая запись → текст',
+                        courses: [
+                            { id: 'full_course', title: 'Полный курс тату-мастера', price: '22,500₽' },
+                            { id: 'basic_course', title: 'Базовый курс с видео', price: '12,500₽' }
+                        ],
+                        coursesText: 'Городские легенды Токио часто становятся основой для уникальных тату-дизайнов. Изучи искусство воплощения мистических образов.'
+                    },
+                    {
+                        symbol: '隙',
+                        title: 'Клиентка из щели',
+                        timestamp: '18.11.05 - 14:30',
+                        type: 'normal',
+                        content: `Пришла странная клиентка. Хотела тату - силуэт человека, сдавленного между стенами.
+
+"Я знаю это место," - сказала она. "Щель в Сибуя. Там тихо. Там можно спрятаться от всего."
+
+Когда поворачивалась боком - исчезала. Буквально. Как будто её толщина = 0.`,
+                        metadata: 'Рабочие заметки',
+                        courses: [
+                            { id: 'text_course', title: 'Текстовый курс', price: '5,500₽' },
+                            { id: 'procreate_course', title: 'Рисование в Procreate', price: '7,500₽' }
+                        ],
+                        coursesText: 'Работа с необычными клиентами требует особых навыков. Изучи психологию татуировок и символику.'
+                    },
+                    {
+                        symbol: '鏡',
+                        title: 'Кисаи-мотоко возвращается',
+                        timestamp: '20.11.05 - 02:15',
+                        type: 'corrupted',
+                        content: `В зеркале студии... она есть. Кисаи-мотоко из городской легенды.
+
+Но не ребёнок. Взрослая женщина, сплющенная до толщины бумаги. Пытается выбраться из рамы зеркала.
+
+Машет мне рукой. Зовёт присоединиться.`,
+                        metadata: 'ФАЙЛ ПОВРЕЖДЁН - ЧАСТИЧНОЕ ВОССТАНОВЛЕНИЕ'
+                    },
+                    {
+                        symbol: '街',
+                        title: 'Охота на щели',
+                        timestamp: '25.11.05 - 14:33',
+                        type: 'corrupted',
+                        content: `Начала искать щели по всему Токио. Между зданиями, между эскалаторами в метро, в переходах Сибуя.
+
+И в каждой - силуэты людей. Плоские, как тени. Они машут мне. Приглашают войти.
+
+Сегодня попробовала протиснуться в узкий проход. Получилось! Стала тоньше. Кожа растянулась, но не порвалась.`,
+                        metadata: 'Автосохранение активировано',
+                        courses: [
+                            { id: 'smm_course', title: 'Ведение соцсетей для тату', price: '12,500₽' }
+                        ],
+                        coursesText: 'Документируй необычные места Токио в соцсетях. Урбанистическая эстетика популярна у молодежи.'
+                    },
+                    {
+                        symbol: '痛',
+                        title: 'Физические изменения',
+                        timestamp: '28.11.05 - 09:45',
+                        type: 'corrupted',
+                        content: `Тело меняется. Становлюсь плоской. Рёбра почти не прощупываются.
+
+Клиенты жалуются: "Когда ты поворачиваешься боком, тебя не видно."
+
+Сегодня прошла между двумя припаркованными машинами. Боком. Зазор 10 см. Как лист бумаги.`,
+                        metadata: 'Медицинские заметки'
+                    },
+                    {
+                        symbol: '記',
+                        title: 'Коллективная память щелей',
+                        timestamp: '01.12.05 - 16:20',
+                        type: 'system',
+                        content: `ВНИМАНИЕ: Обнаружены воспоминания других людей.
+
+ФАЙЛ: gap_memories.dat
+СОДЕРЖАНИЕ: Воспоминания людей, "провалившихся" в щели Токио с 1960-х.
+
+Офисные работники, студенты, домохозяйки. Все искали место, где можно спрятаться от карьеры, экзаменов, семейного давления.
+
+СТАТУС: Коллективное сознание активно.`,
+                        metadata: 'СИСТЕМНОЕ СООБЩЕНИЕ'
+                    },
+                    {
+                        symbol: '魂',
+                        title: 'Правда о Щели',
+                        timestamp: '05.12.05 - 22:17',
+                        type: 'corrupted',
+                        content: `Понимаю теперь. Щель в Сибуя - это не место. Это состояние.
+
+Способ стать невидимой в переполненном городе. Исчезнуть между зданиями, между людьми, между ожиданиями.
+
+Клиентка научила меня. Я больше не трёхмерная. Я живу между измерениями.`,
+                        metadata: 'Личный дневник - последняя запись'
+                    },
+                    {
+                        symbol: '選',
+                        title: 'Последний выбор',
+                        timestamp: '07.12.05 - 03:00',
+                        type: 'system',
+                        content: `КРИТИЧЕСКОЕ СОСТОЯНИЕ: Трансформация завершается.
+
+Аира может выбрать:
+1. Остаться в щели навсегда - стать частью коллективного сознания плоских людей
+2. Вернуться в 3D-мир - но потерять способность скрываться
+3. Стать проводником - помогать другим находить щели
+
+ТРЕБУЕТСЯ РЕШЕНИЕ ПОЛЬЗОВАТЕЛЯ.`,
+                        metadata: 'ТРЕБУЕТСЯ РЕШЕНИЕ',
+                        courses: [
+                            { id: 'consultation', title: 'Консультация тату-мастера', price: '3,000₽' }
+                        ],
+                        coursesText: 'Сложные жизненные выборы требуют мудрости. Получи консультацию о поиске своего пути.'
+                    }
+                ];
+            }
+
+            updateChoicesForMemory(memory, memoryNumber) {
+                this.choicesContainer.innerHTML = '';
+
+                if (memoryNumber < this.getMemories().length) {
+                    this.addChoice('📖 Следующая запись', 'next_memory', false, () => {
+                        this.showMemory(memoryNumber + 1);
+                    });
+                }
+
+                if (memoryNumber >= 3) {
+                    this.addChoice('🗺️ Найти щели в Токио', 'find_gaps', false, () => {
+                        this.showGapMap();
+                    });
+                }
+
+                if (memoryNumber >= 6) {
+                    this.addChoice('👥 Истории других "плоских"', 'flat_people', false, () => {
+                        this.showFlatPeopleStories();
+                    });
+                }
+
+                if (memoryNumber === 8) {
+                    this.addChoice('🏠 Остаться в щели навсегда', 'stay_gap', true, () => {
+                        this.showEnding('stay');
+                    });
+                    this.addChoice('🌍 Вернуться в обычный мир', 'return_3d', false, () => {
+                        this.showEnding('return');
+                    });
+                    this.addChoice('🤝 Стать проводником между мирами', 'become_guide', false, () => {
+                        this.showEnding('guide');
+                    });
+                }
+
+                if (!this.gameState.coursesViewed && memoryNumber >= 2) {
+                    this.addChoice('🎓 Изучить тату-мастерство', 'view_courses', false, () => {
+                        this.showCoursesOverview();
+                    });
+                }
+            }
+
+            showGapMap() {
+                this.gameContent.innerHTML = `
+                    <div style="padding: 15px;">
+                        <div class="nav-button" onclick="game.showMemory(${this.currentMemory})" style="margin-bottom: 15px;">← К записям</div>
+                        
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div class="japanese-text" style="font-size: 16px; color: var(--accent-blue);">
+                                <span class="japanese-symbol">隙</span>КАРТА ЩЕЛЕЙ ТОКИО
+                            </div>
+                        </div>
+
+                        <div class="memory-entry normal">
+                            <div class="memory-text">
+                                📍 <strong>Сибуя</strong> - Главная щель между зданиями 109 и центром. Ширина: 15 см.
+                                <br><br>
+                                Здесь началось всё. Портал между измерениями.
+                            </div>
+                        </div>
+
+                        <div class="memory-entry normal">
+                            <div class="memory-text">
+                                🚇 <strong>Станция Синдзюку</strong> - Щели между вагонами поездов JR.
+                                <br><br>
+                                Плоские люди путешествуют по городу, зажатые между транспортом.
+                            </div>
+                        </div>
+
+                        <div class="memory-entry corrupted">
+                            <div class="memory-text">
+                                🏢 <strong>Район Гинза</strong> - Микрощели между витринами магазинов.
+                                <br><br>
+                                Офисные работники прячутся от корпоративного давления.
+                            </div>
+                        </div>
+
+                        <div class="memory-entry system">
+                            <div class="memory-text">
+                                ВСЕГО ОБНАРУЖЕНО: 47 активных щелей
+                                <br>
+                                НАСЕЛЁННОСТЬ: ~200 плоских людей
+                                <br>
+                                СТАТУС: Популяция растёт
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                this.choicesContainer.innerHTML = '';
+                this.addChoice('📱 Сфотографировать щели', 'photo_gaps', false, () => {
+                    this.showGapPhotos();
+                });
+                this.addChoice('🚶‍♀️ Попробовать войти в щель', 'enter_gap', true, () => {
+                    this.showGapEntry();
+                });
+            }
+
+            showFlatPeopleStories() {
+                this.gameContent.innerHTML = `
+                    <div style="padding: 15px;">
+                        <div class="nav-button" onclick="game.showMemory(${this.currentMemory})" style="margin-bottom: 15px;">← К записям</div>
+                        
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div class="japanese-text" style="font-size: 16px; color: var(--accent-purple);">
+                                <span class="japanese-symbol">人</span>ИСТОРИИ ПЛОСКИХ ЛЮДЕЙ
+                            </div>
+                        </div>
+
+                        <div class="memory-entry normal">
+                            <div class="memory-header">
+                                <span>Танака Хироши • Салариман • 1987</span>
+                                <span>Возраст: 35</span>
+                            </div>
+                            <div class="memory-text">
+                                "Работал по 16 часов в день. Щель между офисными зданиями стала моим убежищем. Теперь живу там. Никто не требует отчётов."
+                            </div>
+                        </div>
+
+                        <div class="memory-entry normal">
+                            <div class="memory-header">
+                                <span>Ямада Мики • Студентка • 2003</span>
+                                <span>Возраст: 19</span>
+                            </div>
+                            <div class="memory-text">
+                                "Родители ждали, что поступлю в Токийский университет. Давление было невыносимым. В щели тихо. Можно быть собой."
+                            </div>
+                        </div>
+
+                        <div class="memory-entry corrupted">
+                            <div class="memory-header">
+                                <span>Сато Эми • Домохозяйка • 1999</span>
+                                <span>Возраст: 28</span>
+                            </div>
+                            <div class="memory-text">
+                                "Муж, свекровь, дети - все требовали идеальности. Я стала плоской от их ожиданий. Щель просто сделала это буквальным."
+                            </div>
+                        </div>
+
+                        <div class="memory-entry system">
+                            <div class="memory-text">
+                                ПАТТЕРН: Все плоские люди - жертвы социального давления японского общества.
+                                <br><br>
+                                Щели = метафора эскапизма.
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                this.choicesContainer.innerHTML = '';
+                this.addChoice('💬 Попробовать поговорить с ними', 'talk_flat', false, () => {
+                    this.showFlatConversation();
+                });
+                this.addChoice('📖 Записать их истории', 'record_stories', false, () => {
+                    this.showStoryRecording();
+                });
+            }
+
+            showCoursesOverview() {
+                this.gameState.coursesViewed = true;
+                
+                this.gameContent.innerHTML = `
+                    <div style="padding: 15px;">
+                        <div class="nav-button" onclick="game.showMemory(${this.currentMemory})" style="margin-bottom: 15px;">← К записям</div>
+                        
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div class="japanese-text" style="font-size: 16px; color: var(--text-primary);">
+                                <span class="japanese-symbol">学</span>АКАДЕМИЯ ТАТУ-МАСТЕРСТВА
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">По следам Аиры Мацуи</div>
+                        </div>
+
+                        <div class="memory-entry normal">
+                            <div class="memory-text">
+                                История Аиры показала тёмную сторону изоляции. Но есть и светлая - мастерство, которое объединяет людей через искусство.
+                            </div>
+                        </div>
+
+                        <div style="margin: 15px 0; background: rgba(0, 255, 170, 0.1); border: 1px solid var(--text-primary); border-radius: 8px; padding: 15px;">
+                            <div style="font-size: 13px; font-weight: bold; margin-bottom: 10px; color: var(--text-primary);">ДОСТУПНЫЕ КУРСЫ:</div>
+                            
+                            <div style="margin: 8px 0; padding: 8px; background: rgba(255, 0, 128, 0.1); border-radius: 4px;">
+                                <strong>Полный курс тату-мастера</strong> - 22,500₽ (было 45,000₽)
+                                <br><small>Теория + видео + наставничество • 1-2 месяца</small>
+                                <button class="course-button" onclick="game.showCourse('full_course')">🎓 Подробнее</button>
+                            </div>
+
+                            <div style="margin: 8px 0; padding: 8px; background: rgba(0, 153, 255, 0.1); border-radius: 4px;">
+                                <strong>Базовый курс с видео</strong> - 12,500₽ (было 25,000₽)
+                                <br><small>Теория + видео + финальный созвон</small>
+                                <button class="course-button" onclick="game.showCourse('basic_course')">🎓 Подробнее</button>
+                            </div>
+
+                            <div style="margin: 8px 0; padding: 8px; background: rgba(138, 43, 226, 0.1); border-radius: 4px;">
+                                <strong>Ведение соцсетей для тату</strong> - 12,500₽ (было 25,000₽)
+                                <br><small>Reels, TikTok, продвижение • 3 недели</small>
+                                <button class="course-button" onclick="game.showCourse('smm_course')">🎓 Подробнее</button>
+                            </div>
+                        </div>
+
+                        <div class="memory-entry system">
+                            <div class="memory-text">
+                                🎁 Промокод SUKIMA50 - скидка 50% на все курсы
+                                <br>+ Бесплатная консультация с мастером
+                                <br><br>
+                                <em>В память об Аире - найди связь с миром через искусство</em>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                this.choicesContainer.innerHTML = '';
+                this.addChoice('📋 Скопировать промокод', 'copy_promo', false, () => {
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText('SUKIMA50');
+                    }
+                    this.showNotification('Промокод SUKIMA50 скопирован!');
+                });
+            }
+
+            showCourse(courseId) {
+                const courses = {
+                    'full_course': {
+                        title: 'ПОЛНЫЙ КУРС ТАТУ-МАСТЕРА',
+                        description: 'Стань профессиональным тату-мастером, как Аира. Создавай искусство, которое объединяет, а не изолирует.',
+                        skills: ['Теория татуировки', 'Работа с оборудованием', 'Эскизы и дизайн', 'Гигиена и безопасность', 'Психология клиента', 'Развитие студии'],
+                        duration: '1-2 месяца',
+                        project: 'Собственная тату-студия',
+                        price: '45,000₽',
+                        salePrice: '22,500₽'
+                    },
+                    'basic_course': {
+                        title: 'БАЗОВЫЙ КУРС С ВИДЕО',
+                        description: 'Оптимальный старт в тату-мастерстве. Теория + практические видео-уроки от профессионалов.',
+                        skills: ['Основы татуировки', 'Видео-уроки', 'Создание эскизов', 'Работа с пигментом', 'Базовое продвижение'],
+                        duration: '1-2 месяца',
+                        project: 'Первые татуировки',
+                        price: '25,000₽',
+                        salePrice: '12,500₽'
+                    },
+                    'smm_course': {
+                        title: 'ВЕДЕНИЕ СОЦСЕТЕЙ ДЛЯ ТАТУ',
+                        description: 'Научись рассказывать истории через соцсети. Как Аира вела дневник, но с пользой для бизнеса.',
+                        skills: ['Бренд тату-мастера', 'Контент для Instagram', 'TikTok и Reels', 'Работа с клиентами', 'Продажи в соцсетях'],
+                        duration: '3 недели',
+                        project: 'Популярный профиль',
+                        price: '25,000₽',
+                        salePrice: '12,500₽'
+                    }
+                };
+
+                const course = courses[courseId];
+                this.gameContent.innerHTML = `
+                    <div style="padding: 15px;">
+                        <div class="nav-button" onclick="game.showCoursesOverview()" style="margin-bottom: 15px;">← К курсам</div>
+                        
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 16px; color: var(--accent-pink);">${course.title}</div>
+                        </div>
+                        
+                        <div class="memory-entry normal">
+                            <div class="memory-text">${course.description}</div>
+                        </div>
+
+                        <div class="memory-entry system">
+                            <div class="memory-text">
+                                <strong>Изучишь:</strong><br>
+                                ${course.skills.map(skill => `• ${skill}`).join('<br>')}
+                            </div>
+                        </div>
+
+                        <div class="memory-entry normal">
+                            <div class="memory-text">
+                                <strong>Длительность:</strong> ${course.duration}<br>
+                                <strong>Итоговый проект:</strong> ${course.project}
+                            </div>
+                        </div>
+
+                        <div class="memory-entry corrupted">
+                            <div class="memory-text">
+                                <span style="text-decoration: line-through; opacity: 0.6;">${course.price}</span><br>
+                                <strong style="font-size: 18px; color: var(--text-primary);">${course.salePrice}</strong><br>
+                                <span style="font-size: 10px;">🔥 Скидка 50% в память об Аире</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                this.choicesContainer.innerHTML = '';
+                this.addChoice('💳 Купить курс', 'buy_course', false, () => {
+                    this.showPayment(course);
+                });
+                this.addChoice('📱 Узнать подробнее', 'more_info', false, () => {
+                    if (tg) {
+                        tg.openTelegramLink('https://t.me/your_support_bot');
+                    }
+                });
+            }
+
+            showPayment(course) {
+                this.gameContent.innerHTML = `
+                    <div style="padding: 15px; text-align: center;">
+                        <div style="font-size: 16px; color: var(--text-primary); margin-bottom: 20px;">ОФОРМЛЕНИЕ ПОКУПКИ</div>
+                        
+                        <div class="memory-entry system">
+                            <div class="memory-text">Курс: ${course.title}</div>
+                        </div>
+
+                        <div class="memory-entry normal">
+                            <div class="memory-text">К оплате: <strong>${course.salePrice}</strong></div>
+                        </div>
+
+                        <div class="memory-entry corrupted">
+                            <div class="memory-text">⚠️ Безопасная оплата через Telegram Payments</div>
+                        </div>
+                    </div>
+                `;
+
+                this.choicesContainer.innerHTML = '';
+                this.addChoice('💳 Оплатить через Telegram', 'process_payment', false, () => {
+                    this.processTelegramPayment(course);
+                    this.showPaymentSuccess(course);
+                });
+            }
+
+            showPaymentSuccess(course) {
+                this.gameContent.innerHTML = `
+                    <div style="padding: 15px; text-align: center;">
+                        <div style="font-size: 16px; color: var(--text-primary); margin-bottom: 20px;">ПОКУПКА ЗАВЕРШЕНА</div>
+                        
+                        <div class="memory-entry system">
+                            <div class="memory-text">✅ Курс "${course.title}" приобретён!</div>
+                        </div>
+
+                        <div class="memory-entry normal">
+                            <div class="memory-text">📧 Ссылка на обучение отправлена<br>💬 Доступ к чату студентов<br>📚 Материалы доступны сразу</div>
+                        </div>
+
+                        <div class="memory-entry corrupted">
+                            <div class="memory-text">🌟 В отличие от Аиры, ты выбрала связь с людьми через искусство, а не изоляцию в щелях.</div>
+                        </div>
+                    </div>
+                `;
+
+                this.choicesContainer.innerHTML = '';
+                this.addChoice('🎓 Начать обучение', 'start_learning', false, () => {
+                    if (tg) {
+                        tg.openTelegramLink('https://your-learning-platform.com/start');
+                    }
+                    this.showCoursesOverview();
+                });
+            }
+
+            showEnding(choice = null) {
+                this.gameState.finalChoice = choice;
+                this.gameState.truthRevealed = true;
+
+                let endingContent = '';
+                
+                if (choice === 'stay') {
+                    endingContent = `
+                        <div class="memory-entry system">
+                            <div class="memory-text">КОНЦОВКА: ЖИЗНЬ В ЩЕЛИ</div>
+                        </div>
+                        <div class="memory-entry corrupted">
+                            <div class="memory-text">Ты выбираешь остаться в двумерном мире. Становишься частью коллективного сознания плоских людей.</div>
+                        </div>
+                        <div class="memory-entry normal">
+                            <div class="memory-text">Больше никакого давления, никаких ожиданий. Только тишина между зданиями Токио.</div>
+                        </div>
+                        <div class="memory-entry system">
+                            <div class="memory-text">Но и никаких новых впечатлений. Вечная изоляция от мира.</div>
+                        </div>
+                    `;
+                } else if (choice === 'return') {
+                    endingContent = `
+                        <div class="memory-entry system">
+                            <div class="memory-text">КОНЦОВКА: ВОЗВРАЩЕНИЕ</div>
+                        </div>
+                        <div class="memory-entry normal">
+                            <div class="memory-text">Ты возвращаешься в трёхмерный мир. Толщина тела восстанавливается.</div>
+                        </div>
+                        <div class="memory-entry corrupted">
+                            <div class="memory-text">Но опыт остается. Ты знаешь, как убежать от проблем. И это знание опасно.</div>
+                        </div>
+                        <div class="memory-entry system">
+                            <div class="memory-text">Придётся учиться справляться с давлением здоровыми способами.</div>
+                        </div>
+                    `;
+                } else if (choice === 'guide') {
+                    endingContent = `
+                        <div class="memory-entry system">
+                            <div class="memory-text">КОНЦОВКА: ПРОВОДНИК</div>
+                        </div>
+                        <div class="memory-entry normal">
+                            <div class="memory-text">Ты становишься мостом между мирами. Помогаешь людям найти баланс.</div>
+                        </div>
+                        <div class="memory-entry corrupted">
+                            <div class="memory-text">Некоторых учишь находить щели для временного отдыха. Других - возвращаться к реальности.</div>
+                        </div>
+                        <div class="memory-entry system">
+                            <div class="memory-text">Мудрый выбор. Изоляция и связь должны дополнять друг друга.</div>
+                        </div>
+                    `;
+                } else {
+                    endingContent = `
+                        <div class="memory-entry system">
+                            <div class="memory-text">ТАЙНА РАСКРЫТА</div>
+                        </div>
+                        <div class="memory-entry normal">
+                            <div class="memory-text">Телефон выключается. Записи исчезают. Остаётся только вопрос...</div>
+                        </div>
+                        <div class="memory-entry corrupted">
+                            <div class="memory-text">Сколько людей в Токио живёт в щелях между зданиями? И готова ли ты их найти?</div>
+                        </div>
+                    `;
+                }
+
+                this.gameContent.innerHTML = `
+                    <div style="padding: 15px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div class="japanese-text" style="font-size: 18px; color: var(--accent-pink);">
+                                <span class="japanese-symbol">終</span>ФИНАЛ
+                            </div>
+                        </div>
+
+                        ${endingContent}
+
+                        <div style="margin-top: 20px; padding: 12px; background: rgba(0, 255, 170, 0.1); border: 1px solid var(--text-primary); border-radius: 8px;">
+                            <div style="font-size: 11px; color: var(--text-primary); margin-bottom: 8px;">💡 ПОСЛЕСЛОВИЕ</div>
+                            <div style="font-size: 12px;">История Аиры показала важность баланса между одиночеством и связью с людьми. Тату-искусство может стать способом найти этот баланс.</div>
+                            <button class="course-button" onclick="game.showCoursesOverview()">
+                                🎓 Изучить тату-мастерство
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                this.choicesContainer.innerHTML = '';
+                this.addChoice('🔄 Пройти снова', 'restart', false, () => {
+                    location.reload();
+                });
+                this.addChoice('📱 Поделиться историей', 'share', false, () => {
+                    if (tg) {
+                        tg.switchInlineQuery('Прошла мистический квест про плоских людей Токио 📱隙間女');
+                    }
+                });
+            }
+
+            addChoice(text, id, dangerous = false, callback) {
+                const button = document.createElement('button');
+                button.className = `choice-button ${dangerous ? 'dangerous' : ''}`;
+                button.textContent = text;
+                button.onclick = callback;
+                this.choicesContainer.appendChild(button);
+            }
+
+            showNotification(text) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `position: fixed; top: 50px; right: 20px; background: var(--accent-pink); color: white; padding: 10px; border-radius: 5px; z-index: 1000;`;
+                notification.textContent = text;
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 3000);
+            }
+
+            showDeviceInfo() {
+                this.gameContent.innerHTML = `
+                    <div style="padding: 15px;">
+                        <div class="nav-button" onclick="game.showMainInterface()" style="margin-bottom: 15px;">← Назад</div>
+                        
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div class="japanese-text" style="font-size: 16px; color: var(--accent-blue);">
+                                <span class="japanese-symbol">機</span>ИНФОРМАЦИЯ ОБ УСТРОЙСТВЕ
+                            </div>
+                        </div>
+
+                        <div class="memory-entry system">
+                            <div class="memory-text">
+                                Модель: DoCoMo P901i (2005)<br>
+                                Владелец: 松井愛良 (Аира Мацуи)<br>
+                                Статус: Найдена мертвой в щели<br>
+                                Память: 10MB (частично повреждена)<br>
+                                GPS: Аномальные показания
+                            </div>
+                        </div>
+
+                        <div class="memory-entry corrupted">
+                            <div class="memory-text">
+                                ⚠️ АНОМАЛИИ:<br>
+                                • GPS показывает координаты внутри стен<br>
+                                • Камера снимает щели, которых нет<br>
+                                • Записи восстанавливаются из поврежденных секторов<br>
+                                • Устройство работает без батареи
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                this.choicesContainer.innerHTML = '';
+                this.addChoice('🔍 К расследованию', 'back_to_investigation', false, () => {
+                    this.showMainInterface();
+                });
+            }
+
+            processTelegramPayment(course) {
+                if (tg && tg.initDataUnsafe?.user) {
+                    const paymentData = {
+                        course: course.title,
+                        price: course.salePrice,
+                        userId: tg.initDataUnsafe.user.id,
+                        userName: tg.initDataUnsafe.user.first_name,
+                        timestamp: Date.now(),
+                        promo: 'SUKIMA50'
+                    };
+                    
+                    tg.sendData(JSON.stringify({
+                        type: 'purchase',
+                        data: paymentData
+                    }));
+                }
+            }
+        }
+
+        let game;
+        document.addEventListener('DOMContentLoaded', () => {
+            game = new SukimaOnnaGame();
+            
+            if (tg) {
+                tg.MainButton.text = "НАЧАТЬ РАССЛЕДОВАНИЕ";
+                tg.MainButton.show();
+                tg.MainButton.onClick(() => {
+                    if (!game.gameState.deviceBooted) {
+                        game.showBootScreen();
+                    }
+                });
+                
+                tg.setHeaderColor('#0a0a0f');
+                tg.setBackgroundColor('#0a0a0f');
+            }
+        });
+
+        // Глитч эффекты в стиле 2005-2006
+        setInterval(() => {
+            if (Math.random() < 0.02) {
+                document.body.style.filter = `hue-rotate(${Math.random() * 360}deg) saturate(${1 + Math.random()})`; 
+                setTimeout(() => { document.body.style.filter = 'none'; }, 100);
+            }
+        }, 3000);
+
+        // Мигание японского текста
+        setInterval(() => {
+            const japaneseElements = document.querySelectorAll('.japanese-text');
+            japaneseElements.forEach(el => {
+                if (Math.random() < 0.05) {
+                    el.style.opacity = Math.random() > 0.5 ? '1' : '0.7';
+                    setTimeout(() => { el.style.opacity = '1'; }, 150);
+                }
+            });
+        }, 2000);
+    </script>
+</body>
+</html>

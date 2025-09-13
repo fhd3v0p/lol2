@@ -1,0 +1,1568 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>白石隆浩 | УБИЙЦА ИЗ TWITTER</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
+        
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-secondary: #1a1a2e;
+            --text-primary: #00ffaa;
+            --text-secondary: #666;
+            --accent-pink: #ff0080;
+            --accent-blue: #0099ff;
+            --accent-purple: #8a2be2;
+            --border-color: #333;
+            --choice-bg: #001a0f;
+            --choice-hover: #002a1f;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Share Tech Mono', 'Noto Sans JP', monospace;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Glitch эффекты как в 2005-2006 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 255, 170, 0.03) 2px,
+                    rgba(0, 255, 170, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+            animation: scanlines 2s linear infinite;
+        }
+
+        @keyframes scanlines {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(4px); }
+        }
+
+        .phone-container {
+            width: 400px;
+            height: 780px;
+            margin: 20px auto;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border: 3px solid #444;
+            border-radius: 30px;
+            padding: 18px;
+            box-shadow: 
+                0 0 60px var(--shadow-red),
+                inset 0 0 30px rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 10;
+            filter: contrast(1.2) brightness(0.9);
+        }
+
+        .phone-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                );
+            pointer-events: none;
+            border-radius: 30px;
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            border-radius: 25px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phone-header {
+            background: var(--bg-tertiary);
+            padding: 12px 18px;
+            font-size: 11px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .carrier-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .signal-bars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .signal-bar {
+            width: 3px;
+            height: 8px;
+            background: var(--text-primary);
+            opacity: 0.4;
+            transition: opacity 0.3s;
+        }
+
+        .signal-bar.active {
+            opacity: 1;
+            box-shadow: 0 0 5px var(--glow-orange);
+        }
+
+        .battery {
+            color: var(--accent-blood);
+            animation: batteryDrain 5s infinite;
+        }
+
+        @keyframes batteryDrain {
+            0%, 60% { opacity: 1; }
+            80%, 100% { opacity: 0.3; }
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 20px 18px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* ИНДИКАТОРЫ СОСТОЯНИЯ */
+        .status-meters {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid #555;
+            border-radius: 8px;
+            padding: 12px;
+            font-size: 10px;
+            z-index: 100;
+            min-width: 120px;
+        }
+
+        .meter {
+            margin-bottom: 8px;
+        }
+
+        .meter-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .meter-bar {
+            width: 100px;
+            height: 6px;
+            background: #333;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .meter-fill {
+            height: 100%;
+            transition: width 0.8s ease;
+        }
+
+        .fear-fill {
+            background: linear-gradient(90deg, var(--text-primary), var(--accent-blood));
+        }
+
+        .sanity-fill {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pale));
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, var(--accent-gold), var(--text-primary));
+        }
+
+        /* ГЛАВЫ И СЮЖЕТ */
+        .chapter-intro {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chapter-title {
+            font-size: 20px;
+            color: var(--accent-blood);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .chapter-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .chapter-location {
+            font-size: 11px;
+            color: var(--accent-gold);
+        }
+
+        .story-segment {
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 12px;
+            padding: 18px;
+            margin: 18px 0;
+            position: relative;
+            animation: segmentSlide 0.8s ease-out;
+        }
+
+        @keyframes segmentSlide {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .story-segment.corrupted {
+            background: rgba(204, 0, 0, 0.1);
+            border-color: var(--accent-blood);
+            animation: segmentGlitch 0.4s ease-out;
+        }
+
+        @keyframes segmentGlitch {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        .story-segment.memory {
+            background: rgba(139, 79, 179, 0.1);
+            border-color: var(--accent-purple);
+        }
+
+        .story-segment.discovery {
+            background: rgba(255, 215, 0, 0.1);
+            border-color: var(--accent-gold);
+        }
+
+        .segment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .segment-content {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+
+        .segment-timestamp {
+            font-size: 10px;
+            color: var(--text-secondary);
+            text-align: right;
+            opacity: 0.8;
+        }
+
+        .japanese-text {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 300;
+        }
+
+        .japanese-symbol {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-size: 24px;
+            color: var(--accent-blood);
+            display: inline-block;
+            margin-right: 10px;
+            animation: symbolGlow 4s infinite alternate;
+        }
+
+        @keyframes symbolGlow {
+            from { 
+                text-shadow: 0 0 10px var(--accent-blood);
+                transform: scale(1);
+            }
+            to { 
+                text-shadow: 0 0 25px var(--accent-blood), 0 0 35px var(--accent-blood);
+                transform: scale(1.05);
+            }
+        }
+
+        /* ИНТЕРАКТИВНЫЕ ЭЛЕМЕНТЫ */
+        .choice-section {
+            background: var(--bg-secondary);
+            border: 2px solid #555;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .choice-title {
+            color: var(--accent-gold);
+            font-size: 14px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .choice-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .choice-button {
+            padding: 16px;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 2px solid #666;
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-align: left;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .choice-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--glow-orange), transparent);
+            transition: left 0.6s;
+        }
+
+        .choice-button:hover::before {
+            left: 100%;
+        }
+
+        .choice-button:hover {
+            border-color: var(--text-primary);
+            box-shadow: 0 0 20px var(--glow-orange);
+            transform: translateY(-3px);
+        }
+
+        .choice-button.dangerous {
+            border-color: var(--accent-blood);
+            background: linear-gradient(135deg, rgba(204, 0, 0, 0.15), var(--bg-tertiary));
+        }
+
+        .choice-button.dangerous:hover {
+            box-shadow: 0 0 25px rgba(204, 0, 0, 0.6);
+        }
+
+        .choice-button.special {
+            border-color: var(--accent-gold);
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), var(--bg-tertiary));
+        }
+
+        .choice-description {
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        /* МИНИ-ИГРЫ */
+        .mini-game {
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 2px solid var(--accent-purple);
+            border-radius: 12px;
+            padding: 22px;
+            margin: 22px 0;
+            text-align: center;
+        }
+
+        .game-title {
+            color: var(--accent-purple);
+            font-size: 15px;
+            margin-bottom: 18px;
+            font-weight: bold;
+        }
+
+
+        /* ПРОГРЕСС И ИНДИКАТОРЫ */
+        .progress-tracker {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .progress-chapter {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .progress-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #444;
+            border: 2px solid #666;
+            transition: all 0.4s;
+            position: relative;
+        }
+
+        .progress-dot.completed {
+            background: var(--accent-blood);
+            border-color: var(--accent-blood);
+            box-shadow: 0 0 12px var(--accent-blood);
+        }
+
+        .progress-dot.active {
+            background: var(--text-primary);
+            border-color: var(--text-primary);
+            animation: dotPulse 2s infinite;
+        }
+
+        @keyframes dotPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .progress-label {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-align: center;
+        }
+
+        .choices-container {
+            padding: 18px;
+            border-top: 1px solid #444;
+            background: var(--bg-tertiary);
+        }
+
+        .interaction-hint {
+            text-align: center;
+            color: var(--accent-gold);
+            font-size: 12px;
+            margin-bottom: 15px;
+            animation: hintPulse 3s infinite;
+        }
+
+        @keyframes hintPulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* СПЕЦИАЛЬНЫЕ ЭФФЕКТЫ */
+        .slit-mouth-animation {
+            position: absolute;
+            width: 60px;
+            height: 40px;
+            background: var(--accent-blood);
+            border-radius: 50% 50% 20px 20px;
+            opacity: 0.3;
+            animation: slitMouthMove 8s linear infinite;
+        }
+
+        @keyframes slitMouthMove {
+            0% { left: -60px; top: 20%; transform: scaleX(1); }
+            25% { left: 25%; top: 10%; }
+            50% { left: 50%; top: 30%; transform: scaleX(-1); }
+            75% { left: 75%; top: 15%; }
+            100% { left: calc(100% + 60px); top: 25%; transform: scaleX(-1); }
+        }
+
+        .mirror-effect {
+            background: linear-gradient(45deg, 
+                rgba(255, 215, 0, 0.1) 0%, 
+                rgba(139, 79, 179, 0.1) 50%, 
+                rgba(255, 215, 0, 0.1) 100%);
+            border: 1px solid var(--accent-gold);
+            animation: mirrorShimmer 3s infinite;
+        }
+
+        @keyframes mirrorShimmer {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="status-meters">
+        <div class="meter">
+            <div class="meter-label">
+                <span class="japanese-text">恐怖</span>
+                <span id="fearValue">0%</span>
+            </div>
+            <div class="meter-bar">
+                <div class="meter-fill fear-fill" id="fearBar"></div>
+            </div>
+        </div>
+        <div class="meter">
+            <div class="meter-label">
+                <span class="japanese-text">正気</span>
+                <span id="sanityValue">100%</span>
+            </div>
+            <div class="meter-bar">
+                <div class="meter-fill sanity-fill" id="sanityBar" style="width: 100%;"></div>
+            </div>
+        </div>
+        <div class="meter">
+            <div class="meter-label">
+                <span class="japanese-text">進行</span>
+                <span id="progressValue">0%</span>
+            </div>
+            <div class="meter-bar">
+                <div class="meter-fill progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="phone-container">
+        <div class="screen">
+            <div class="phone-header">
+                <div class="carrier-info">
+                    <div class="signal-bars">
+                        <div class="signal-bar active"></div>
+                        <div class="signal-bar active"></div>
+                        <div class="signal-bar"></div>
+                        <div class="signal-bar"></div>
+                    </div>
+                    <span class="japanese-text" style="font-size: 10px;">NTT DoCoMo</span>
+                </div>
+                <div class="battery">04% ⚠️</div>
+            </div>
+
+            <div id="gameContent" class="content-area">
+                <!-- Контент загружается динамически -->
+            </div>
+
+            <div id="choicesContainer" class="choices-container">
+                <div class="interaction-hint japanese-text">起動中...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.ready();
+            tg.expand();
+            tg.setHeaderColor('#0a0a0f');
+            tg.setBackgroundColor('#0a0a0f');
+        }
+
+        class KuchisakeOnnaSaga {
+            constructor() {
+                this.gameContent = document.getElementById('gameContent');
+                this.choicesContainer = document.getElementById('choicesContainer');
+                
+                this.gameState = {
+                    chapter: 0,
+                    fear: 0,
+                    sanity: 100,
+                    progress: 0,
+                    playerName: '',
+                    choices: [],
+                    cluesFound: [],
+                    secretsUnlocked: [],
+                    mirrorsSeen: 0,
+                    alliedWithSpirit: false,
+                    knowsTruth: false,
+                    hasAmulet: false,
+                    survivedNight: false
+                };
+
+                this.chapters = [
+                    { name: 'Пролог', label: 'Находка' },
+                    { name: 'Глава 1', label: 'Первая встреча' },
+                    { name: 'Глава 2', label: 'Городские слухи' },
+                    { name: 'Глава 3', label: 'История происхождения' },
+                    { name: 'Глава 4', label: 'Зеркальный мир' },
+                    { name: 'Глава 5', label: 'Конфронтация' },
+                    { name: 'Глава 6', label: 'Правда' },
+                    { name: 'Эпилог', label: 'Последствия' }
+                ];
+
+                if (tg?.initDataUnsafe?.user) {
+                    this.gameState.playerName = tg.initDataUnsafe.user.first_name || 'Таинственный исследователь';
+                }
+
+                this.init();
+            }
+
+            init() {
+                this.updateMeters();
+                this.showPrologue();
+            }
+
+            showPrologue() {
+                this.gameState.chapter = 0;
+                this.updateProgress(5);
+                
+                this.gameContent.innerHTML = `
+                    <div>
+                        <div class="chapter-intro">
+                            <div class="chapter-title">
+                                <span class="japanese-symbol">白</span>УБИЙЦА ИЗ TWITTER
+                            </div>
+                            <div class="chapter-subtitle">Дело: Сираиси Такахиро (白石隆浩)</div>
+                            <div class="chapter-location">Дзама, Канагава • 2017 • Twitter DM</div>
+                        </div>
+
+                        <div class="story-segment">
+                            <div class="segment-header">
+                                <span>📱 Найденный Twitter аккаунт</span>
+                                <span>31.10.2017</span>
+                            </div>
+                            <div class="segment-content">
+                                Полиция обнаружила активный аккаунт в Twitter, принадлежащий Сираиси Такахиро.
+                                Профиль заполнен сообщениями для девушек, планирующих самоубийство.
+                                <br><br>
+                                @shiraishi_helper: "Помогу уйти безболезненно. Не будешь одна."
+                                <br><br>
+                                <span style="color: var(--accent-pink);">
+                                9 убийств за 2 месяца. Возраст жертв: 15-26 лет.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="story-segment corrupted">
+                            <div class="segment-header">
+                                <span>⚠️ Полицейский отчёт</span>
+                                <span>Токийская полиция</span>
+                            </div>
+                            <div class="segment-content">
+                                ВНИМАНИЕ: Обнаружена новая схема убийств через социальные сети.
+                                Преступник эксплуатирует суицидальные настроения молодёжи.
+                                <br><br>
+                                Сираиси предлагал "помощь в суициде", но на деле грабил и убивал жертв.
+                                В доме найдено 240+ фрагментов человеческих останков в морозильниках.
+                                <br><br>
+                                <span style="color: var(--accent-pink);">
+                                Впервые в истории: серийный убийца, использующий Twitter.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="choice-section">
+                            <div class="choice-title">🔍 Первое решение</div>
+                            <div class="choice-grid">
+                                <button class="choice-button" onclick="game.makeChoice('start_careful')">
+                                    📱 Изучить Twitter переписки
+                                    <div class="choice-description">Как Сираиси заманивал жертв</div>
+                                </button>
+                                <button class="choice-button dangerous" onclick="game.makeChoice('start_deep')">
+                                    🏠 Осмотр дома убийцы
+                                    <div class="choice-description">240 фрагментов в морозильниках</div>
+                                </button>
+                                <button class="choice-button" onclick="game.makeChoice('start_scientific')">
+                                    👤 Профиль жертв
+                                    <div class="choice-description">Кого выбирал маньяк</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        ${this.renderProgressTracker()}
+                    </div>
+                `;
+
+                this.setChoices([]);
+            }
+
+            makeChoice(choiceId, customData = null) {
+                this.gameState.choices.push(choiceId);
+                
+                switch(choiceId) {
+                    case 'start_careful':
+                        this.updateFear(10);
+                        this.updateSanity(-5);
+                        this.showChapter1('careful');
+                        break;
+                    case 'start_deep':
+                        this.updateFear(25);
+                        this.updateSanity(-15);
+                        this.showChapter1('deep');
+                        break;
+                    case 'start_scientific':
+                        this.updateFear(5);
+                        this.updateSanity(-2);
+                        this.showChapter1('scientific');
+                        break;
+                    default:
+                        this.handleSpecificChoice(choiceId, customData);
+                }
+            }
+
+            showChapter1(approach) {
+                this.gameState.chapter = 1;
+                this.updateProgress(15);
+                this.addSlitMouthAnimation();
+                
+                const approachText = {
+                    'careful': 'Ты анализируешь Twitter переписки Сираиси...',
+                    'deep': 'Ты входишь в дом, где нашли останки...',
+                    'scientific': 'Ты изучаешь профили жертв убийцы...'
+                };
+
+                this.gameContent.innerHTML = `
+                    <div>
+                        <div class="chapter-intro">
+                            <div class="chapter-title">
+                                <span class="japanese-symbol">📱</span>ЦИФРОВОЙ ХИЩНИК
+                            </div>
+                            <div class="chapter-subtitle">Глава 1: Twitter как орудие убийства</div>
+                            <div class="chapter-location">Дзама, Канагава • Квартира Сираиси • 2017</div>
+                        </div>
+
+                        <div class="story-segment">
+                            <div class="segment-content">
+                                ${approachText[approach]}
+                            </div>
+                        </div>
+
+                        <div class="story-segment memory">
+                            <div class="segment-header">
+                                <span>📱 Twitter DM • @shiraishi_helper</span>
+                                <span>22.08.2017</span>
+                            </div>
+                            <div class="segment-content">
+                                <strong>Последние сообщения первой жертвы:</strong>
+                                <br><br>
+                                <em>Девушка, 21 год:</em> "Больше не могу... родители не понимают..."
+                                <br><br>
+                                <em>Сираиси:</em> "Понимаю тебя. Давай встретимся. Поможем друг другу уйти красиво."
+                                <br><br>
+                                <span style="color: var(--accent-pink);">
+                                Через 3 часа после этого сообщения девушка была мертва.
+                                360,000 иен украдено с её карты.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="story-segment corrupted">
+                            <div class="segment-header">
+                                <span>🏠 Место преступлений</span>
+                                <span>Дзама • Квартира</span>
+                            </div>
+                            <div class="segment-content">
+                                <strong>Схема убийств:</strong> Приглашал в квартиру под предлогом "совместного суицида".
+                                <br><br>
+                                <strong>Методы:</strong> Связывание кабелем, изнасилование, удушение веревкой.
+                                Альтернативно - снотворное в напитке.
+                                <br><br>
+                                <strong>После убийства:</strong> Грабёж, расчленение тела, заморозка в холодильниках.
+                                <br><br>
+                                <span style="color: var(--accent-pink);">
+                                240+ фрагментов человеческих останков найдено в доме.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="story-segment corrupted">
+                            <div class="segment-header">
+                                <span>⚖️ Современное правосудие</span>
+                                <span>2017-2025</span>
+                            </div>
+                            <div class="segment-content">
+                                В отличие от дел прошлого, Сираиси был пойман быстро благодаря технологиям.
+                                <br><br>
+                                <strong>Как поймали:</strong>
+                                <br>• Камеры видеонаблюдения проследили путь последней жертвы
+                                <br>• Цифровые следы в Twitter привели к дому
+                                <br>• 31 октября 2017 - арест
+                                <br><br>
+                                <span style="color: var(--accent-pink);">
+                                15 декабря 2020 - смертный приговор.
+                                27 июня 2025 - казнь через повешение.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="choice-section">
+                            <div class="choice-title">⚡ СЛЕДУЮЩИЙ ШАГ</div>
+                            <div class="choice-grid">
+                                <button class="choice-button" onclick="game.showChapter2()">
+                                    🔍 Продолжить расследование
+                                    <div class="choice-description">Изучить паттерны убийств</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        ${this.renderProgressTracker()}
+                    </div>
+                `;
+
+                this.setChoices([]);
+            }
+
+            showChapter2() {
+                this.gameState.chapter = 2;
+                this.updateProgress(35);
+                
+                this.gameContent.innerHTML = `
+                    <div>
+                        <div class="chapter-intro">
+                            <div class="chapter-title">
+                                <span class="japanese-symbol">噂</span>ГОРОДСКИЕ СЛУХИ
+                            </div>
+                            <div class="chapter-subtitle">Глава 2: Эпидемия страха</div>
+                            <div class="chapter-location">Токио • Различные районы • 1980-1990</div>
+                        </div>
+
+                        <div class="story-segment corrupted">
+                            <div class="segment-header">
+                                <span>📱 Сводка полиции</span>
+                                <span>1980-1985</span>
+                            </div>
+                            <div class="segment-content">
+                                За 5 лет зарегистрировано:
+                                <br>• 67 сообщений о встречах с "женщиной в маске"
+                                <br>• 23 случая исчезновения детей
+                                <br>• 12 нападений с применением режущих предметов
+                                <br><br>
+                                <span style="color: var(--accent-blood);">
+                                Все пострадавшие описывают одинаковую женщину.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="story-segment">
+                            <div class="segment-header">
+                                <span>📱 Интервью • Детектив Сато</span>
+                                <span>15.12.1988</span>
+                            </div>
+                            <div class="segment-content">
+                                "Это не обычный маньяк. Свидетели утверждают, что она появляется 
+                                и исчезает мгновенно. Камеры не фиксируют её присутствие.
+                                <br><br>
+                                Но самое странное - дети, которые выжили, все рассказывают 
+                                одну историю. Про женщину, которая спрашивает про красоту 
+                                и носит хирургическую маску."
+                            </div>
+                        </div>
+
+                        <div class="choice-section">
+                            <div class="choice-title">🗺️ Паттерн появлений</div>
+                            <div class="choice-grid">
+                                <button class="choice-button" onclick="game.makeChoice('investigate_schools')">
+                                    🏫 Исследовать школы
+                                    <div class="choice-description">Она чаще всего появляется возле учебных заведений</div>
+                                </button>
+                                <button class="choice-button" onclick="game.makeChoice('investigate_mirrors')">
+                                    🪞 Найти зеркала
+                                    <div class="choice-description">Свидетели упоминают отражения</div>
+                                </button>
+                                <button class="choice-button dangerous" onclick="game.makeChoice('investigate_night')">
+                                    🌙 Ночное патрулирование
+                                    <div class="choice-description">Попытаться встретить её лично</div>
+                                </button>
+                            </div>
+                        </div>
+
+                        ${this.renderProgressTracker()}
+                    </div>
+                `;
+
+                this.setChoices([]);
+            }
+
+            handleSpecificChoice(choiceId, customData) {
+                switch(choiceId) {
+                    case 'investigate_schools':
+                        this.updateFear(15);
+                        this.updateSanity(-8);
+                        this.showChapter3('schools');
+                        break;
+                    case 'investigate_mirrors':
+                        this.updateFear(20);
+                        this.updateSanity(-10);
+                        this.gameState.mirrorsSeen++;
+                        this.showChapter3('mirrors');
+                        break;
+                    case 'investigate_night':
+                        this.updateFear(35);
+                        this.updateSanity(-20);
+                        this.showChapter3('night');
+                        break;
+                    case 'ally_with_spirit':
+                        this.gameState.alliedWithSpirit = true;
+                        this.updateFear(-10);
+                        this.updateSanity(-25);
+                        this.showChapter5();
+                        break;
+                    case 'seek_truth':
+                        this.gameState.knowsTruth = true;
+                        this.updateFear(10);
+                        this.updateSanity(-5);
+                        this.showChapter5();
+                        break;
+                    case 'get_amulet':
+                        this.gameState.hasAmulet = true;
+                        this.updateFear(-5);
+                        this.showChapter5();
+                        break;
+                    default:
+                        this.continueStory();
+                }
+            }
+
+            showChapter3(path) {
+                this.gameState.chapter = 3;
+                this.updateProgress(50);
+                
+                const pathContent = {
+                    'schools': {
+                        title: 'ШКОЛЬНЫЕ УЖАСЫ',
+                        location: 'Начальная школа Сибуя',
+                        content: `
+                            <div class="story-segment corrupted">
+                                <div class="segment-header">
+                                    <span>📱 Запись директора школы</span>
+                                    <span>03.04.1983</span>
+                                </div>
+                                <div class="segment-content">
+                                    Третий ребёнок на этой неделе пришёл домой с порезами на лице. 
+                                    Все говорят про "красивую тётю с маской".
+                                    <br><br>
+                                    Устанавливаем дополнительное освещение и просим родителей 
+                                    забирать детей до заката.
+                                </div>
+                            </div>
+                        `
+                    },
+                    'mirrors': {
+                        title: 'ЗЕРКАЛЬНЫЕ ВИДЕНИЯ',
+                        location: 'Токийский парк • Общественные туалеты',
+                        content: `
+                            <div class="story-segment mirror-effect">
+                                <div class="segment-header">
+                                    <span>📱 Показания уборщицы</span>
+                                    <span>17.09.1984</span>
+                                </div>
+                                <div class="segment-content">
+                                    В женском туалете разбиты все зеркала. Каждую ночь.
+                                    <br><br>
+                                    Ставлю новые - к утру осколки. Но самое жуткое...
+                                    иногда вижу в отражении не себя, а женщину с разрезанным ртом.
+                                    <br><br>
+                                    <span style="color: var(--accent-gold);">
+                                    Она машет мне из зеркала.
+                                    </span>
+                                </div>
+                            </div>
+                        `
+                    },
+                    'night': {
+                        title: 'НОЧНАЯ ВСТРЕЧА',
+                        location: 'Улицы Сибуя • 02:30',
+                        content: `
+                            <div class="story-segment corrupted">
+                                <div class="segment-header">
+                                    <span>📱 Личная запись</span>
+                                    <span>СЕЙЧАС</span>
+                                </div>
+                                <div class="segment-content">
+                                    Ты патрулируешь пустые улицы. Внезапно слышишь шаги за спиной.
+                                    <br><br>
+                                    Оборачиваешься - женщина в белом пальто и хирургической маске.
+                                    Она медленно приближается.
+                                    <br><br>
+                                    <span style="color: var(--accent-blood);">
+                                    "Ваташи киреи?" - её голос звучит как эхо.
+                                    </span>
+                                </div>
+                            </div>
+                        `
+                    }
+                };
+
+                const content = pathContent[path];
+                
+                this.gameContent.innerHTML = `
+                    <div>
+                        <div class="chapter-intro">
+                            <div class="chapter-title">
+                                <span class="japanese-symbol">源</span>${content.title}
+                            </div>
+                            <div class="chapter-subtitle">Глава 3: История происхождения</div>
+                            <div class="chapter-location">${content.location}</div>
+                        </div>
+
+                        ${content.content}
+
+                        <div class="story-segment discovery">
+                            <div class="segment-header">
+                                <span>📱 Архивная находка</span>
+                                <span>1978</span>
+                            </div>
+                            <div class="segment-content">
+                                В медицинских записях найдена информация о пациентке:
+                                <br><br>
+                                <strong>Ямада Мики, 28 лет</strong>
+                                <br>• Пластическая операция на лице
+                                <br>• Неудачное вмешательство
+                                <br>• Психическое расстройство после операции
+                                <br>• Исчезла из больницы 31.10.1978
+                                <br><br>
+                                <span style="color: var(--accent-gold);">
+                                Первые сообщения о "кучисакэ-онна" появились 1 ноября 1978.
+                                </span>
+                            </div>
+                        </div>
+
+                        ${this.renderChapter4Choices()}
+                        ${this.renderProgressTracker()}
+                    </div>
+                `;
+
+                this.setChoices([]);
+            }
+
+            renderChapter4Choices() {
+                return `
+                    <div class="choice-section">
+                        <div class="choice-title">💭 Понимание истины</div>
+                        <div class="choice-grid">
+                            <button class="choice-button special" onclick="game.makeChoice('ally_with_spirit')">
+                                🤝 Попытаться помочь духу
+                                <div class="choice-description">Она жертва, а не монстр</div>
+                            </button>
+                            <button class="choice-button" onclick="game.makeChoice('seek_truth')">
+                                🔍 Найти полную правду
+                                <div class="choice-description">Изучить все обстоятельства</div>
+                            </button>
+                            <button class="choice-button" onclick="game.makeChoice('get_amulet')">
+                                🛡️ Найти защиту
+                                <div class="choice-description">Получить духовный амулет</div>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+
+            showChapter5() {
+                this.gameState.chapter = 5;
+                this.updateProgress(75);
+                
+                this.gameContent.innerHTML = `
+                    <div>
+                        <div class="chapter-intro">
+                            <div class="chapter-title">
+                                <span class="japanese-symbol">対</span>КОНФРОНТАЦИЯ
+                            </div>
+                            <div class="chapter-subtitle">Глава 5: Лицом к лицу</div>
+                            <div class="chapter-location">Заброшенная больница • Полночь</div>
+                        </div>
+
+                        <div class="story-segment corrupted">
+                            <div class="segment-content">
+                                Ты приходишь в ту самую больницу, где всё началось. 
+                                Коридоры пусты, но ты чувствуешь присутствие.
+                                <br><br>
+                                В операционной тебя ждёт она. Мики Ямада.
+                                Кучисакэ-онна.
+                            </div>
+                        </div>
+
+                        ${this.renderFinalEncounter()}
+                        ${this.renderProgressTracker()}
+                    </div>
+                `;
+
+                this.setChoices([]);
+            }
+
+            renderFinalEncounter() {
+                if (this.gameState.alliedWithSpirit) {
+                    return `
+                        <div class="story-segment memory">
+                            <div class="segment-content">
+                                "Ты... понимаешь меня?" - её голос дрожит.
+                                <br><br>
+                                Без маски она выглядит печально. Шрамы рассказывают 
+                                историю боли и отчаяния.
+                                <br><br>
+                                "Я просто хотела быть красивой..."
+                            </div>
+                        </div>
+                        <div class="choice-section">
+                            <div class="choice-title">💖 Момент сочувствия</div>
+                            <div class="choice-grid">
+                                <button class="choice-button special" onclick="game.showEnding('redemption')">
+                                    ✨ Помочь ей найти покой
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else if (this.gameState.knowsTruth) {
+                    return `
+                        <div class="story-segment discovery">
+                            <div class="segment-content">
+                                Ты знаешь правду. Она не монстр - она жертва системы красоты, 
+                                которая довела её до отчаяния.
+                                <br><br>
+                                "Ваташи киреи?" - спрашивает она в последний раз.
+                            </div>
+                        </div>
+                        <div class="choice-section">
+                            <div class="choice-title">💬 Последний ответ</div>
+                            <div class="choice-grid">
+                                <button class="choice-button" onclick="game.showEnding('truth')">
+                                    "Красота не в лице"
+                                </button>
+                                <button class="choice-button dangerous" onclick="game.showEnding('lie')">
+                                    "Да, ты красивая"
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="story-segment corrupted">
+                            <div class="segment-content">
+                                Она приближается с ножницами в руке.
+                                <br><br>
+                                "Ваташи киреи?"
+                                <br><br>
+                                У тебя есть ${this.gameState.hasAmulet ? 'амулет' : 'только слова'}.
+                            </div>
+                        </div>
+                        <div class="choice-section">
+                            <div class="choice-title">⚔️ Защита</div>
+                            <div class="choice-grid">
+                                ${this.gameState.hasAmulet ? `
+                                    <button class="choice-button special" onclick="game.showEnding('protected')">
+                                        🛡️ Использовать амулет
+                                    </button>
+                                ` : ''}
+                                <button class="choice-button" onclick="game.showEnding('word_trick')">
+                                    🏃‍♂️ Тихо отступить
+                                </button>
+                                <button class="choice-button dangerous" onclick="game.showEnding('fight')">
+                                    ⚔️ Попытаться драться
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            showEnding(endingType) {
+                this.gameState.chapter = 7;
+                this.updateProgress(100);
+                
+                const endings = {
+                    'redemption': {
+                        title: 'ИСКУПЛЕНИЕ',
+                        content: `
+                            <div class="story-segment special">
+                                <div class="segment-content">
+                                    Твоё сочувствие разрушает проклятие. Мики плачет - первые 
+                                    слёзы за 27 лет страданий.
+                                    <br><br>
+                                    "Спасибо... что увидел во мне человека."
+                                    <br><br>
+                                    Она исчезает в светлом сиянии. Кучисакэ-онна больше 
+                                    не будет преследовать детей.
+                                    <br><br>
+                                    <span style="color: var(--accent-gold);">
+                                    История Мики находит покой.
+                                    </span>
+                                </div>
+                            </div>
+                        `,
+                        outcome: 'Лучшая концовка'
+                    },
+                    'truth': {
+                        title: 'ГОРЬКАЯ ПРАВДА',
+                        content: `
+                            <div class="story-segment discovery">
+                                <div class="segment-content">
+                                    "Красота не в лице, а в душе," - говоришь ты.
+                                    <br><br>
+                                    Она останавливается. Долгая пауза.
+                                    <br><br>
+                                    "Но... моя душа тоже искалечена," - шепчет она и исчезает.
+                                    <br><br>
+                                    Нападения прекращаются, но дух не находит покоя.
+                                </div>
+                            </div>
+                        `,
+                        outcome: 'Частичное решение'
+                    },
+                    'protected': {
+                        title: 'ЗАЩИЩЁННЫЙ',
+                        content: `
+                            <div class="story-segment">
+                                <div class="segment-content">
+                                    Амулет светится ярким светом. Кучисакэ-онна отступает.
+                                    <br><br>
+                                    "Ты... подготовился," - говорит она с уважением.
+                                    <br><br>
+                                    Она исчезает, но ты знаешь - она вернётся к тем, 
+                                    кто не готов встретить её.
+                                </div>
+                            </div>
+                        `,
+                        outcome: 'Личное спасение'
+                    },
+                    'word_trick': {
+                        title: 'СТАРЫЙ ТРЮК',
+                        content: `
+                            <div class="story-segment">
+                                <div class="segment-content">
+                                    "Помада," - быстро отвечаешь ты.
+                                    <br><br>
+                                    Она замирает, растерянная. Слово сбивает её с толку.
+                                    <br><br>
+                                    Пока она думает, ты убегаешь. Древний трюк сработал.
+                                    <br><br>
+                                    Но проблема не решена. Она найдёт других жертв.
+                                </div>
+                            </div>
+                        `,
+                        outcome: 'Временное спасение'
+                    },
+                    'fight': {
+                        title: 'НЕУДАЧНАЯ ПОПЫТКА',
+                        content: `
+                            <div class="story-segment corrupted">
+                                <div class="segment-content">
+                                    Ты пытаешься сбежать, но она быстрее.
+                                    <br><br>
+                                    "Теперь ты будешь красивым... как я."
+                                    <br><br>
+                                    <span style="color: var(--accent-blood);">
+                                    Холод ножниц касается твоего лица...
+                                    </span>
+                                </div>
+                            </div>
+                        `,
+                        outcome: 'Плохая концовка'
+                    }
+                };
+
+                const ending = endings[endingType];
+                
+                this.gameContent.innerHTML = `
+                    <div>
+                        <div class="chapter-intro">
+                            <div class="chapter-title">
+                                <span class="japanese-symbol">終</span>${ending.title}
+                            </div>
+                            <div class="chapter-subtitle">Эпилог: ${ending.outcome}</div>
+                        </div>
+
+                        ${ending.content}
+
+                        <div style="margin: 30px 0; padding: 20px; background: rgba(255, 107, 53, 0.1); border-radius: 12px; text-align: center;">
+                            <div style="color: var(--accent-gold); font-size: 16px; margin-bottom: 15px;">
+                                📊 СТАТИСТИКА ПРОХОЖДЕНИЯ
+                            </div>
+                            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+                                Страх: ${this.gameState.fear}% • Рассудок: ${this.gameState.sanity}%<br>
+                                Улик найдено: ${this.gameState.cluesFound.length}<br>
+                                Секретов открыто: ${this.gameState.secretsUnlocked.length}<br>
+                                Концовка: ${ending.outcome}
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin: 20px 0; padding: 15px; background: rgba(139, 79, 179, 0.1); border-radius: 8px;">
+                            <div style="color: var(--accent-purple); margin-bottom: 10px;">
+                                💭 ПОСЛЕСЛОВИЕ
+                            </div>
+                            <div style="font-size: 13px;">
+                                История Кучисакэ-онна напоминает нам о важности сочувствия 
+                                и понимания истинной красоты. 
+                                <br><br>
+                                Возможно, пора изучить искусство, которое помогает людям 
+                                чувствовать себя красивыми?
+                            </div>
+                        </div>
+
+                        ${this.renderProgressTracker()}
+                    </div>
+                `;
+
+                this.setChoices([
+                    {
+                        text: '🔄 Пройти снова',
+                        action: () => location.reload(),
+                        description: 'Попробовать другие варианты'
+                    },
+                    {
+                        text: '🎓 Изучить тату-мастерство',
+                        action: () => this.showCoursesOverview(),
+                        description: 'Искусство настоящей красоты'
+                    },
+                    {
+                        text: '📱 Поделиться историей',
+                        action: () => this.shareStory(),
+                        description: 'Рассказать друзьям'
+                    }
+                ]);
+            }
+
+            showCoursesOverview() {
+                this.gameContent.innerHTML = `
+                    <div>
+                        <div style="text-align: center; margin-bottom: 25px;">
+                            <h2 style="font-size: 20px; color: var(--text-primary);">
+                                <span class="japanese-symbol">美</span>АКАДЕМИЯ КРАСОТЫ
+                            </h2>
+                            <div style="font-size: 13px; color: var(--text-secondary);">
+                                Тату-мастерство • Настоящая красота изнутри
+                            </div>
+                        </div>
+
+                        <div class="story-segment">
+                            <div class="segment-content">
+                                История Мики Ямада показала, как стремление к внешней красоте 
+                                может стать проклятием. Но есть искусство, которое помогает 
+                                людям выразить свою внутреннюю красоту - татуировки.
+                            </div>
+                        </div>
+
+                        <div style="background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(139, 79, 179, 0.1)); border: 2px solid var(--text-primary); border-radius: 15px; padding: 22px; margin: 22px 0;">
+                            <div style="font-size: 16px; font-weight: bold; margin-bottom: 18px; color: var(--text-primary); text-align: center;">
+                                ДОСТУПНЫЕ КУРСЫ:
+                            </div>
+                            
+                            <div style="margin: 15px 0; padding: 18px; background: rgba(204, 0, 0, 0.1); border-radius: 10px;">
+                                <div style="font-weight: bold; font-size: 15px;">Полный курс тату-мастера</div>
+                                <div style="font-size: 12px; margin: 8px 0;">Полное обучение искусству татуировки от основ до мастерства</div>
+                                <div style="font-size: 11px; margin: 5px 0; color: var(--text-secondary);">Теория + видео + наставничество • 1-2 месяца</div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                                    <span style="text-decoration: line-through; opacity: 0.6; font-size: 14px;">45,000₽</span>
+                                    <span style="font-size: 18px; font-weight: bold; color: var(--accent-blood);">22,500₽</span>
+                                </div>
+                            </div>
+
+                            <div style="margin: 15px 0; padding: 18px; background: rgba(139, 79, 179, 0.1); border-radius: 10px;">
+                                <div style="font-weight: bold; font-size: 15px;">SMM для тату-мастеров</div>
+                                <div style="font-size: 12px; margin: 8px 0;">Создай бренд, который помогает людям чувствовать себя красивыми</div>
+                                <div style="font-size: 11px; margin: 5px 0; color: var(--text-secondary);">Instagram, TikTok, продвижение • 3 недели</div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                                    <span style="text-decoration: line-through; opacity: 0.6; font-size: 14px;">25,000₽</span>
+                                    <span style="font-size: 18px; font-weight: bold; color: var(--accent-purple);">12,500₽</span>
+                                </div>
+                            </div>
+
+                            <div style="margin: 15px 0; padding: 18px; background: rgba(255, 215, 0, 0.1); border-radius: 10px;">
+                                <div style="font-weight: bold; font-size: 15px;">Procreate для эскизов</div>
+                                <div style="font-size: 12px; margin: 8px 0;">Цифровое искусство для создания уникальных тату-дизайнов</div>
+                                <div style="font-size: 11px; margin: 5px 0; color: var(--text-secondary);">Рисование в iPad • Гибкий график</div>
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                                    <span style="text-decoration: line-through; opacity: 0.6; font-size: 14px;">15,000₽</span>
+                                    <span style="font-size: 18px; font-weight: bold; color: var(--accent-gold);">7,500₽</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; padding: 20px; background: var(--bg-secondary); border-radius: 12px; margin: 20px 0;">
+                            <div style="color: var(--accent-blood); font-size: 16px; margin-bottom: 10px;">🎁 ПРОМОКОД</div>
+                            <div style="font-size: 24px; font-weight: bold; letter-spacing: 4px; color: var(--text-primary);">
+                                BEAUTY50
+                            </div>
+                            <div style="font-size: 11px; margin-top: 8px; color: var(--text-secondary);">
+                                Скидка 50% + бесплатная консультация<br>
+                                В память о Мики Ямада
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                this.setChoices([
+                    {
+                        text: '📋 Скопировать промокод BEAUTY50',
+                        action: () => {
+                            if (navigator.clipboard) {
+                                navigator.clipboard.writeText('BEAUTY50');
+                            }
+                            this.showNotification('Промокод BEAUTY50 скопирован!');
+                        },
+                        description: 'Сохранить промокод в буфер обмена'
+                    },
+                    {
+                        text: '💬 Консультация с мастером',
+                        action: () => this.contactSupport(),
+                        description: 'Получить персональную помощь'
+                    },
+                    {
+                        text: '🔄 Вернуться к истории',
+                        action: () => location.reload(),
+                        description: 'Пройти сагу заново'
+                    }
+                ]);
+            }
+
+            // СЛУЖЕБНЫЕ МЕТОДЫ
+            updateFear(delta) {
+                this.gameState.fear = Math.max(0, Math.min(100, this.gameState.fear + delta));
+                this.updateMeters();
+            }
+
+            updateSanity(delta) {
+                this.gameState.sanity = Math.max(0, Math.min(100, this.gameState.sanity + delta));
+                this.updateMeters();
+            }
+
+            updateProgress(value) {
+                this.gameState.progress = value;
+                this.updateMeters();
+            }
+
+            updateMeters() {
+                document.getElementById('fearValue').textContent = this.gameState.fear + '%';
+                document.getElementById('fearBar').style.width = this.gameState.fear + '%';
+                
+                document.getElementById('sanityValue').textContent = this.gameState.sanity + '%';
+                document.getElementById('sanityBar').style.width = this.gameState.sanity + '%';
+                
+                document.getElementById('progressValue').textContent = this.gameState.progress + '%';
+                document.getElementById('progressBar').style.width = this.gameState.progress + '%';
+            }
+
+            renderProgressTracker() {
+                return `
+                    <div class="progress-tracker">
+                        ${this.chapters.map((chapter, index) => `
+                            <div class="progress-chapter">
+                                <div class="progress-dot ${index < this.gameState.chapter ? 'completed' : index === this.gameState.chapter ? 'active' : ''}"></div>
+                                <div class="progress-label">${chapter.label}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+
+            addSlitMouthAnimation() {
+                const animation = document.createElement('div');
+                animation.className = 'slit-mouth-animation';
+                animation.style.top = Math.random() * 200 + 'px';
+                this.gameContent.appendChild(animation);
+                
+                setTimeout(() => {
+                    if (animation.parentNode) animation.remove();
+                }, 8000);
+            }
+
+            setChoices(choices) {
+                if (choices.length === 0) return;
+                
+                this.choicesContainer.innerHTML = `
+                    <div class="interaction-hint">Выберите действие:</div>
+                    ${choices.map(choice => `
+                        <button class="choice-button ${choice.dangerous ? 'dangerous' : choice.special ? 'special' : ''}" data-action="${choice.text}">
+                            ${choice.text}
+                            ${choice.description ? `<div class="choice-description">${choice.description}</div>` : ''}
+                        </button>
+                    `).join('')}
+                `;
+
+                const buttons = this.choicesContainer.querySelectorAll('.choice-button');
+                buttons.forEach((button, index) => {
+                    button.onclick = choices[index].action;
+                });
+            }
+
+            showNotification(text) {
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed; top: 60px; right: 20px; 
+                    background: var(--text-primary); color: black; 
+                    padding: 12px 16px; border-radius: 8px; 
+                    z-index: 1000; font-size: 12px; font-weight: bold;
+                    box-shadow: 0 0 20px var(--glow-orange);
+                `;
+                notification.textContent = text;
+                document.body.appendChild(notification);
+                setTimeout(() => notification.remove(), 3000);
+            }
+
+            shareStory() {
+                if (tg) {
+                    tg.switchInlineQuery('Прошла эпическую сагу о Кучисакэ-онна! 8 глав японского хоррора 👻🪞');
+                }
+            }
+
+            contactSupport() {
+                if (tg) {
+                    tg.openTelegramLink('https://t.me/your_beauty_support');
+                }
+            }
+
+            continueStory() {
+                // Резервная функция для продолжения
+                this.showChapter5();
+            }
+        }
+
+        // Инициализация игры
+        let game;
+        document.addEventListener('DOMContentLoaded', () => {
+            game = new KuchisakeOnnaSaga();
+            window.game = game; // Делаем объект game доступным глобально
+        });
+
+        // Атмосферные эффекты
+        setInterval(() => {
+            if (Math.random() < 0.04) {
+                document.body.style.filter = `hue-rotate(${Math.random() * 45}deg) contrast(${1.1 + Math.random() * 0.3})`;
+                setTimeout(() => { document.body.style.filter = 'none'; }, 400);
+            }
+        }, 12000);
+
+        // Эффект мерцания японских символов
+        setInterval(() => {
+            const symbols = document.querySelectorAll('.japanese-symbol');
+            symbols.forEach(symbol => {
+                if (Math.random() < 0.1) {
+                    symbol.style.opacity = Math.random() > 0.5 ? '1' : '0.6';
+                    setTimeout(() => { symbol.style.opacity = '1'; }, 200);
+                }
+            });
+        }, 3000);
+    </script>
+</body>
+</html>

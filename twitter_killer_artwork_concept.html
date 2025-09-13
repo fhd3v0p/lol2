@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitter Killer - Artistic Concept</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono:wght@400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+            font-family: 'Share Tech Mono', 'Noto Sans JP', monospace;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Digital rain effect */
+        .digital-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .rain-drop {
+            position: absolute;
+            color: rgba(0, 255, 170, 0.3);
+            font-size: 12px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Main container */
+        .artwork-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+        }
+
+        /* Urban background silhouette */
+        .urban-background {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60%;
+            background: linear-gradient(to top, 
+                rgba(0, 0, 0, 0.8) 0%,
+                rgba(26, 26, 46, 0.6) 30%,
+                transparent 70%
+            );
+            z-index: 1;
+        }
+
+        .building-silhouette {
+            position: absolute;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            border-top: 1px solid rgba(0, 255, 170, 0.1);
+        }
+
+        .building-1 { left: 0%; width: 20%; height: 40%; }
+        .building-2 { left: 18%; width: 15%; height: 55%; }
+        .building-3 { left: 30%; width: 25%; height: 35%; }
+        .building-4 { right: 25%; width: 20%; height: 60%; }
+        .building-5 { right: 5%; width: 18%; height: 45%; }
+
+        /* Killer silhouette */
+        .killer-silhouette {
+            position: absolute;
+            right: 15%;
+            top: 30%;
+            width: 120px;
+            height: 200px;
+            background: radial-gradient(ellipse at center, 
+                rgba(0, 0, 0, 0.9) 0%,
+                rgba(0, 0, 0, 0.7) 50%,
+                transparent 80%
+            );
+            clip-path: polygon(40% 0%, 60% 0%, 65% 15%, 70% 25%, 75% 30%, 
+                              80% 85%, 85% 100%, 15% 100%, 20% 85%, 
+                              25% 30%, 30% 25%, 35% 15%);
+            animation: lurk 4s ease-in-out infinite;
+            opacity: 0.6;
+            z-index: 3;
+        }
+
+        @keyframes lurk {
+            0%, 100% { transform: translateX(0) scale(1); opacity: 0.6; }
+            50% { transform: translateX(-10px) scale(1.05); opacity: 0.8; }
+        }
+
+        /* Central phone screen */
+        .phone-display {
+            width: 300px;
+            height: 500px;
+            background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+            border: 3px solid rgba(0, 255, 170, 0.3);
+            border-radius: 25px;
+            position: relative;
+            z-index: 5;
+            box-shadow: 
+                0 0 50px rgba(0, 255, 170, 0.2),
+                inset 0 0 20px rgba(0, 255, 170, 0.1);
+            animation: phoneGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes phoneGlow {
+            0%, 100% { box-shadow: 0 0 50px rgba(0, 255, 170, 0.2), inset 0 0 20px rgba(0, 255, 170, 0.1); }
+            50% { box-shadow: 0 0 80px rgba(0, 255, 170, 0.4), inset 0 0 30px rgba(0, 255, 170, 0.2); }
+        }
+
+        .phone-screen {
+            width: 280px;
+            height: 480px;
+            background: #0a0a0f;
+            border-radius: 20px;
+            margin: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Twitter-like interface */
+        .social-header {
+            height: 50px;
+            background: rgba(0, 153, 255, 0.1);
+            border-bottom: 1px solid rgba(0, 255, 170, 0.2);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            color: rgba(0, 255, 170, 0.8);
+            font-size: 14px;
+        }
+
+        .tweet-feed {
+            height: calc(100% - 50px);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tweet {
+            padding: 15px;
+            border-bottom: 1px solid rgba(0, 255, 170, 0.1);
+            animation: fadeInOut 6s ease-in-out infinite;
+            opacity: 0;
+        }
+
+        .tweet:nth-child(1) { animation-delay: 0s; }
+        .tweet:nth-child(2) { animation-delay: 2s; }
+        .tweet:nth-child(3) { animation-delay: 4s; }
+
+        @keyframes fadeInOut {
+            0%, 83% { opacity: 0; transform: translateY(20px); }
+            17%, 67% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+        }
+
+        .tweet-user {
+            color: rgba(0, 255, 170, 0.6);
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .tweet-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .tweet-text.japanese {
+            font-family: 'Noto Sans JP', sans-serif;
+            color: rgba(255, 0, 128, 0.7);
+        }
+
+        .tweet-text.helper {
+            color: rgba(255, 51, 51, 0.8);
+            font-weight: bold;
+        }
+
+        /* Victim echoes */
+        .victim-echo {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background: radial-gradient(ellipse at center, 
+                rgba(0, 255, 170, 0.2) 0%,
+                rgba(0, 255, 170, 0.1) 50%,
+                transparent 80%
+            );
+            clip-path: polygon(40% 0%, 60% 0%, 65% 15%, 70% 30%, 
+                              75% 85%, 80% 100%, 20% 100%, 25% 85%, 
+                              30% 30%, 35% 15%);
+            animation: ghostlyFloat 8s ease-in-out infinite;
+            opacity: 0.3;
+        }
+
+        .victim-echo:nth-child(1) {
+            left: 10%;
+            top: 20%;
+            animation-delay: 0s;
+        }
+
+        .victim-echo:nth-child(2) {
+            left: 75%;
+            top: 60%;
+            animation-delay: 2s;
+        }
+
+        .victim-echo:nth-child(3) {
+            left: 20%;
+            top: 70%;
+            animation-delay: 4s;
+        }
+
+        @keyframes ghostlyFloat {
+            0%, 100% { transform: translateY(0) scale(1); opacity: 0.1; }
+            50% { transform: translateY(-20px) scale(1.1); opacity: 0.4; }
+        }
+
+        /* Glitch effects */
+        .glitch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255, 0, 128, 0.03) 2px,
+                rgba(255, 0, 128, 0.03) 4px
+            );
+            pointer-events: none;
+            animation: glitchMove 2s linear infinite;
+            z-index: 10;
+        }
+
+        @keyframes glitchMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(4px); }
+        }
+
+        /* Title overlay */
+        .title-overlay {
+            position: absolute;
+            bottom: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        .main-title {
+            font-size: 24px;
+            color: rgba(255, 0, 128, 0.9);
+            text-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+            margin-bottom: 10px;
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: rgba(0, 255, 170, 0.7);
+            letter-spacing: 2px;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 20px rgba(255, 0, 128, 0.5); }
+            50% { text-shadow: 0 0 40px rgba(255, 0, 128, 0.8); }
+        }
+
+        /* Broken bird icon */
+        .broken-bird {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            width: 30px;
+            height: 30px;
+            color: rgba(255, 51, 51, 0.6);
+            animation: birdGlitch 3s ease-in-out infinite;
+        }
+
+        @keyframes birdGlitch {
+            0%, 90% { transform: scale(1) rotate(0deg); }
+            95% { transform: scale(1.2) rotate(-5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Digital rain effect -->
+    <div class="digital-rain" id="digitalRain"></div>
+
+    <!-- Glitch overlay -->
+    <div class="glitch-overlay"></div>
+
+    <!-- Main artwork container -->
+    <div class="artwork-container">
+        <!-- Urban background -->
+        <div class="urban-background">
+            <div class="building-silhouette building-1"></div>
+            <div class="building-silhouette building-2"></div>
+            <div class="building-silhouette building-3"></div>
+            <div class="building-silhouette building-4"></div>
+            <div class="building-silhouette building-5"></div>
+        </div>
+
+        <!-- Victim echoes -->
+        <div class="victim-echo"></div>
+        <div class="victim-echo"></div>
+        <div class="victim-echo"></div>
+
+        <!-- Killer silhouette -->
+        <div class="killer-silhouette"></div>
+
+        <!-- Central phone display -->
+        <div class="phone-display">
+            <div class="phone-screen">
+                <div class="social-header">
+                    @helper_shiraishi
+                    <div class="broken-bird">🐦‍⬛</div>
+                </div>
+                <div class="tweet-feed">
+                    <div class="tweet">
+                        <div class="tweet-user">@anonymous_girl_21</div>
+                        <div class="tweet-text japanese">死にたい... 誰も分かってくれない</div>
+                    </div>
+                    <div class="tweet">
+                        <div class="tweet-user">@helper_shiraishi</div>
+                        <div class="tweet-text helper">Я понимаю твою боль. Хочешь встретиться?</div>
+                    </div>
+                    <div class="tweet">
+                        <div class="tweet-user">@lost_student_19</div>
+                        <div class="tweet-text">Больше не могу... помогите...</div>
+                    </div>
+                    <div class="tweet">
+                        <div class="tweet-user">@helper_shiraishi</div>
+                        <div class="tweet-text helper">Приезжай в Дзаму. Я жду.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Title overlay -->
+        <div class="title-overlay">
+            <div class="main-title">白石隆浩</div>
+            <div class="subtitle">27 ИЮНЯ | ВЫСШАЯ МЕРА | ЦИФРОВОЙ ОХОТНИК</div>
+        </div>
+    </div>
+
+    <script>
+        // Digital rain effect
+        function createDigitalRain() {
+            const rainContainer = document.getElementById('digitalRain');
+            const chars = ['0', '1', '白', '石', '死', '助', '人', '殺'];
+            
+            setInterval(() => {
+                if (rainContainer.children.length < 50) {
+                    const drop = document.createElement('div');
+                    drop.className = 'rain-drop';
+                    drop.textContent = chars[Math.floor(Math.random() * chars.length)];
+                    drop.style.left = Math.random() * 100 + '%';
+                    drop.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    drop.style.opacity = Math.random() * 0.5 + 0.1;
+                    rainContainer.appendChild(drop);
+                    
+                    setTimeout(() => {
+                        if (drop.parentNode) {
+                            drop.parentNode.removeChild(drop);
+                        }
+                    }, 5000);
+                }
+            }, 100);
+        }
+
+        // Random glitch effects
+        function addGlitchEffects() {
+            const phone = document.querySelector('.phone-display');
+            
+            setInterval(() => {
+                if (Math.random() < 0.1) {
+                    phone.style.filter = `hue-rotate(${Math.random() * 360}deg) saturate(${1 + Math.random()})`;
+                    setTimeout(() => {
+                        phone.style.filter = 'none';
+                    }, 100);
+                }
+            }, 2000);
+        }
+
+        // Initialize effects
+        document.addEventListener('DOMContentLoaded', () => {
+            createDigitalRain();
+            addGlitchEffects();
+        });
+    </script>
+</body>
+</html>
+
